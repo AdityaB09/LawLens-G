@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-
+    "strings"
 	"lawlens-g/internal/models"
 	"lawlens-g/internal/services"
 
@@ -106,3 +106,41 @@ func (app *AppContext) GetRiskSummary(c *gin.Context) {
 
 	c.JSON(http.StatusOK, summary)
 }
+
+func (app *AppContext) CreateContractFromPDF(c *gin.Context) {
+	title := c.PostForm("title")
+	partyA := c.PostForm("partyA")
+	partyB := c.PostForm("partyB")
+
+	if title == "" || partyA == "" || partyB == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "title, partyA, partyB are required"})
+		return
+	}
+
+	file, err := c.FormFile("file")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "PDF file is required"})
+		return
+	}
+
+	tmpPath := "/tmp/" + file.Filename
+	if err := c.SaveUploadedFile(file, tmpPath); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to save PDF"})
+		return
+	}
+
+	text, err := services.ReadPDFToText(tmpPath)
+	if err != nil || strings.TrimSpace(text) == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to extract text from PDF"})
+		return
+	}
+
+	contract, err := services.CreateContractWithAnalysis(app.DB, title, partyA, partyB, text)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create contract from PDF"})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"id": contract.ID})
+}
+

@@ -23,9 +23,11 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		c.JSON(http.StatusOK, gin.H{"status": "ok", "service": "lawlens-g"})
 	})
 
-	api := r.Group("/api")
+		api := r.Group("/api")
 	{
 		api.POST("/contracts", appCtx.CreateContract)
+		api.POST("/contracts/pdf", appCtx.CreateContractFromPDF) // NEW
+
 		api.GET("/contracts", appCtx.ListContracts)
 		api.GET("/contracts/:id", appCtx.GetContract)
 		api.GET("/contracts/:id/clauses", appCtx.GetContractClauses)
@@ -33,6 +35,7 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 		api.POST("/contracts/compare", appCtx.CompareContracts)
 		api.GET("/contracts/:id/risk-summary", appCtx.GetRiskSummary)
 	}
+
 
 	return r
 }

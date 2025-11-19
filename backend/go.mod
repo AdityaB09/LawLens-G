@@ -5,6 +5,7 @@ go 1.23
 require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/joho/godotenv v1.5.1
+	github.com/zacharysyoung/rsc-thuc-pdf v0.0.0-20231224043948-186a7be0cfdf
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.10
 )

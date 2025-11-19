@@ -1,5 +1,6 @@
 import { getContracts } from "../../lib/api";
 import ContractCard from "../../components/ContractCard";
+import ContractUploadForm from "../../components/ContractUploadForm";
 
 export default async function ContractsPage() {
   const contracts = await getContracts();
@@ -13,6 +14,10 @@ export default async function ContractsPage() {
         </span>
       </header>
 
+      {/* Upload / paste form */}
+      <ContractUploadForm />
+
+      {/* Existing grid of saved contracts */}
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {contracts.map((c) => (
           <ContractCard key={c.id} contract={c} />
