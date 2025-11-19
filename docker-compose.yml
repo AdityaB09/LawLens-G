@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: lawlens
+      POSTGRES_PASSWORD: lawlens
+      POSTGRES_DB: lawlens
+    ports:
+      - "5434:5432"
+    volumes:
+      - lawlens-db-data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./backend
+    environment:
+      PORT: "8080"
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: lawlens
+      DB_PASSWORD: lawlens
+      DB_NAME: lawlens
+      DB_SSLMODE: disable
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+
+  web:
+    build:
+      context: ./web
+    environment:
+      NEXT_PUBLIC_API_BASE: "http://api:8080/api"
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+
+volumes:
+  lawlens-db-data: {}
