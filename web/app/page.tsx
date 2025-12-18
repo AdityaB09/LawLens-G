@@ -1,5 +1,6 @@
 import { getContracts } from "../lib/api";
 import ContractCard from "../components/ContractCard";
+export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
   const contracts = await getContracts();

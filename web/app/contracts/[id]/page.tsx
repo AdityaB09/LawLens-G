@@ -4,6 +4,8 @@ import ClauseViewer from "../../../components/ClauseViewer";
 import RiskHeatmap from "../../../components/RiskHeatmap";
 import ObligationsTimeline from "../../../components/ObligationsTimeline";
 
+export const dynamic = "force-dynamic";
+
 type Props = {
   params: { id: string };
 };

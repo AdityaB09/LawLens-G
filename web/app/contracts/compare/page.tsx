@@ -1,4 +1,5 @@
 import DiffView from "../../../components/DiffView";
+export const dynamic = "force-dynamic";
 
 export default function CompareContractsPage() {
   return (

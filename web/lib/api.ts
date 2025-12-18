@@ -13,9 +13,22 @@ export type ContractSummary = {
 };
 
 export async function getContracts(): Promise<ContractSummary[]> {
-  const res = await fetch(`${API_BASE}/contracts`, { cache: "no-store" });
-  if (!res.ok) throw new Error("Failed to fetch contracts");
-  return res.json();
+  try {
+    const res = await fetch(`${API_BASE}/contracts`, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      console.error("API returned non-200:", res.status);
+      return [];
+    }
+
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch (err) {
+    console.error("Failed to fetch contracts:", err);
+    return [];
+  }
 }
 
 export async function getContract(id: number) {
